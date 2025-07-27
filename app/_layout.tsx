@@ -2,7 +2,6 @@ import { useFonts } from "expo-font";
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
 export default function RootLayout() {
@@ -16,9 +15,11 @@ export default function RootLayout() {
   }
 
   return (
-    <GluestackUIProvider mode="light"><Stack>
+    <GluestackUIProvider mode="light">
+      <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
-      </Stack></GluestackUIProvider>
+      </Stack>
+    </GluestackUIProvider>
   );
 }
