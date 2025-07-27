@@ -1,2 +1,3 @@
-// import Login from "@/screens/login";
-// export default () => <Login />;
+import Auth from "@/screens/auth/index";
+
+export default () => <Auth />;
