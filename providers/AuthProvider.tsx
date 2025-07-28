@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logOut = async () => {
     await supabase.auth.signOut();
-    // router.push('/(auth)');
+    // router.push("/(auth)");
   };
 
   React.useEffect(() => {

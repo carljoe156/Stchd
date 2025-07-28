@@ -19,7 +19,6 @@ export default function RootLayout() {
     <GluestackUIProvider mode="light">
       <AuthProvider>
         <Stack initialRouteName="(auth)">
-          {/* <Stack> */}
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen

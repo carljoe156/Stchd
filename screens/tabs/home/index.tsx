@@ -1,20 +1,82 @@
-import { SafeAreaView } from "react-native";
+import React from "react";
+import { FlatList, Pressable, SafeAreaView, View, Image } from "react-native";
+import { useAuth } from "@/providers/AuthProvider";
+import StchdIcon from "@/assets/icons/stchd";
 import { HStack } from "@/components/ui/hstack";
+import { Card } from "@/components/ui/card";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallbackText,
+  AvatarBadge,
+} from "@/components/ui/avatar";
+import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import StchdIcon from "@/assets/icons/stchd";
+import {
+  Images,
+  Camera,
+  ImagePlay,
+  Mic,
+  Hash,
+  MapPin,
+} from "lucide-react-native";
+import { router } from "expo-router";
+import { Divider } from "@/components/ui/divider";
 
 export default () => {
+  const { user } = useAuth();
   return (
-    <SafeAreaView className="pt-10">
-      <HStack className="items-center justify-center pt-10">
-        <StchdIcon size={40} />
-      </HStack>
-      <VStack space="xl" className="p-2">
-        <HStack className="justify-between">
-          <Text className="text-2xl font-bold">Home</Text>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="pt-10">
+        <HStack className="items-center justify-center">
+          <StchdIcon size={40} />
         </HStack>
-      </VStack>
+      </View>
+
+      <Pressable
+        onPress={() => {
+          router.push("/post");
+        }}
+      >
+        <HStack className="items-center px-5">
+          <Avatar size="md" className="mt-6">
+            <AvatarFallbackText>{user?.username}</AvatarFallbackText>
+            <AvatarImage
+              source={
+                {
+                  // uri: avatarUrl,
+                }
+              }
+              className="w-12 h-12 rounded-full"
+            />
+          </Avatar>
+
+          <Card size="md" className="m-3 bg-transparent">
+            <VStack className="p-3" space="lg">
+              <VStack>
+                <Heading size="md" className="mb-1 text-black">
+                  {user?.username || "No username"}
+                </Heading>
+                <Text size="md" className="text-gray-500">
+                  What's New?
+                </Text>
+              </VStack>
+
+              <HStack className="items-center" space="3xl">
+                <Images size={24} color="gray" strokeWidth={1.5} />
+                <Camera size={24} color="gray" strokeWidth={1.5} />
+                <ImagePlay size={24} color="gray" strokeWidth={1.5} />
+                <Mic size={24} color="gray" strokeWidth={1.5} />
+                <Hash size={24} color="gray" strokeWidth={1.5} />
+                <MapPin size={24} color="gray" strokeWidth={1.5} />
+              </HStack>
+            </VStack>
+          </Card>
+        </HStack>
+      </Pressable>
+
+      <Divider />
     </SafeAreaView>
   );
 };
