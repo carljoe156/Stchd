@@ -47,9 +47,9 @@ export default () => {
           </Input>
         </ScrollView>
       </KeyboardAvoidingView>
-      {/* <Button onPress={handleVerify} className="w-full bg-black p-5 rounded-lg">
-                <ButtonText>Verify</ButtonText>
-            </Button> */}
+      <Button onPress={handleVerify} className="w-full bg-black p-5 rounded-lg">
+        <ButtonText>Verify</ButtonText>
+      </Button>
     </Layout>
   );
 };

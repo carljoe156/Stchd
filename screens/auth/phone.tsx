@@ -18,8 +18,8 @@ export default () => {
     });
     if (!error) {
       router.push({
-        // pathname: "/(auth)/verify",
-        pathname: "./verify",
+        pathname: "/(auth)/verify",
+        // pathname: "./verify",
         params: { phone: `+1${phone}` },
       });
     }

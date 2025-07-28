@@ -18,14 +18,15 @@ export default function RootLayout() {
   return (
     <GluestackUIProvider mode="light">
       <AuthProvider>
-        <Stack>
+        <Stack initialRouteName="(auth)">
+          {/* <Stack> */}
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen
             name="post"
             options={{ headerShown: false, presentation: "modal" }}
           />
-          <Stack.Screen name="+not-found" />
+          <Stack.Screen name="+not-found.tsx" />
         </Stack>
       </AuthProvider>
     </GluestackUIProvider>
