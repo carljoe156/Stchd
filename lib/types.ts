@@ -9,6 +9,7 @@ export interface Post {
   user_id: string;
   parent_id?: string | null;
   text: string;
+  file?: String | null;
   created_at?: string;
   User?: User;
   Post?: Post[];
