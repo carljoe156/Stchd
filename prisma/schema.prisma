@@ -24,6 +24,7 @@ model Post {
   parent_id  String?
   parent     Post?    @relation(name: "Posts", fields: [parent_id], references: [id], onDelete: Cascade)
   text       String
+  file       String?
   Post       Post[]   @relation("Posts")
   created_at DateTime @default(now())
 }
