@@ -1,0 +1,92 @@
+import { supabase } from "@/lib/supabase";
+import React from "react";
+import { Post } from "@/lib/types";
+import * as Crypto from "expo-crypto";
+import { useAuth } from "./AuthProvider";
+
+export const PostContext = React.createContext({
+  posts: [],
+  uploadPosts: () => {},
+  addThread: () => {},
+  updatePost: (id: string, key: string, value: string) => {},
+  clearPosts: () => {},
+  uploadFile: (id: string, uri: string, type: string, name: string) => {},
+  setPhoto: (uri: string) => {},
+  photo: "",
+});
+
+export const usePost = () => React.useContext(PostContext);
+
+export const PostProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  const DefaultPost: Post = {
+    id: Crypto.randomUUID(),
+    user_id: user?.id || "",
+    parent_id: null,
+    text: "",
+    file: null,
+  };
+
+  const [posts, setPosts] = React.useState<Post[]>([DefaultPost]);
+  const [photo, setPhoto] = React.useState<String>("");
+
+  //   React.useEffect(() => {
+  //     if (!user) updatePost(posts[0].id, "user_id", user.id);
+  //   }, [posts]);
+
+  React.useEffect(() => {
+    if (user?.id && posts[0].user_id !== user.id) {
+      setPosts([DefaultPost]);
+    }
+  }, [user?.id]);
+
+  const uploadFile = async (id: string, uri: string, type: string, name: string) => {
+    let newFormData = new FormData();
+    newFormData.append("file", {
+      uri,
+      name,
+      type,
+    });
+
+    const { data, error } = await supabase.storage
+      .from(`files/${user?.id}`)
+      .upload(name, newFormData);
+    if (data) updatePost(id, "file", data.path);
+  };
+
+  const addThread = () => {
+    setPosts([...posts, { ...DefaultPost, parent_id: posts[0].id }]);
+  };
+
+  const uploadPosts = async () => {
+    try {
+      const { data, error } = await supabase.from("Post").insert(posts);
+      if (error) {
+        console.error("Database insert error:", error);
+        return null;
+      }
+      console.log("Posts uploaded successfully:", data);
+      return data || true;
+    } catch (error) {
+      console.error("Upload posts failed:", error);
+      return null;
+    }
+  };
+
+  const updatePost = (id: string, key: string, value: string) => {
+    setPosts(posts.map((p: Post) => (p.id === id ? { ...p, [key]: value } : p)));
+  };
+
+  const clearPosts = () => {
+    // setPosts([{ ...DefaultPost, user_id: user?.id || "" }]);
+    setPosts([DefaultPost]);
+  };
+
+  return (
+    <PostContext.Provider
+      value={{ posts, uploadPosts, addThread, updatePost, uploadFile, clearPosts, setPhoto, photo }}
+    >
+      {children}
+    </PostContext.Provider>
+  );
+};
