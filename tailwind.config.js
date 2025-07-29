@@ -8,6 +8,8 @@ module.exports = {
     "components/**/*.{tsx,jsx,ts,js}",
     "screens/**/*.{tsx,jsx,ts,js}",
     "assets/**/*.{tsx,jsx,ts,js}",
+    "posts/**/*.{tsx,jsx,ts,js}",
+    "tabs/**/*.{tsx,jsx,ts,js}",
   ],
   presets: [require("nativewind/preset")],
   safelist: [
