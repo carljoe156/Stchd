@@ -25,7 +25,7 @@ export default function RootLayout() {
             name="post"
             options={{ headerShown: false, presentation: "modal" }}
           />
-          <Stack.Screen name="+not-found.tsx" />
+          <Stack.Screen name="+not-found" />
         </Stack>
       </AuthProvider>
     </GluestackUIProvider>
