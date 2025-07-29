@@ -5,6 +5,7 @@ import { Stack } from "expo-router";
 import React from "react";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PostProvider } from "@/providers/PostProvider";
 
 const queryClient = new QueryClient();
 
@@ -22,12 +23,16 @@ export default function RootLayout() {
     <GluestackUIProvider mode="light">
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <Stack initialRouteName="(auth)">
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="post" options={{ headerShown: false, presentation: "modal" }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <PostProvider>
+            <Stack initialRouteName="(auth)">
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="post" options={{ headerShown: false, presentation: "modal" }} />
+              <Stack.Screen name="camera" options={{ headerShown: false, presentation: "modal" }} />
+              {/* <Stack.Screen name="thread" options={{ headerShown: false }} /> */}
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </PostProvider>
         </AuthProvider>
       </QueryClientProvider>
     </GluestackUIProvider>
