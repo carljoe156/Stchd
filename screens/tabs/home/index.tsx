@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Pressable, SafeAreaView, View, Image } from "react-native";
+import { FlatList, Pressable, SafeAreaView, View, Image, ScrollView } from "react-native";
 import { useAuth } from "@/providers/AuthProvider";
 import StchdIcon from "@/assets/icons/stchd";
 import { HStack } from "@/components/ui/hstack";
