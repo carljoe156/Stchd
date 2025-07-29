@@ -23,9 +23,20 @@ import {
 } from "lucide-react-native";
 import { router } from "expo-router";
 import { Divider } from "@/components/ui/divider";
+import { supabase } from "@/lib/supabase";
 
 export default () => {
   const { user } = useAuth();
+  const [threads, setThreads] = React.useState([]);
+
+  React.useEffect(() => {
+    getThreads();
+  }, []);
+
+  const getThreads = async () => {
+    const { data, error } = await supabase.from("Post").select("*, User(*)");
+    if (!error) setThreads(data);
+  };
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="pt-10">
@@ -43,11 +54,9 @@ export default () => {
           <Avatar size="md" className="mt-6">
             <AvatarFallbackText>{user?.username}</AvatarFallbackText>
             <AvatarImage
-              source={
-                {
-                  // uri: avatarUrl,
-                }
-              }
+              source={{
+                uri: user?.avatarUrl,
+              }}
               className="w-12 h-12 rounded-full"
             />
           </Avatar>
@@ -75,8 +84,42 @@ export default () => {
           </Card>
         </HStack>
       </Pressable>
-
       <Divider />
+      <VStack space="lg">
+        <FlatList
+          data={threads}
+          renderItem={({ item }) => {
+            return (
+              <HStack className="items-center p-3">
+                <Avatar size="md">
+                  <AvatarFallbackText>{item.User.username}</AvatarFallbackText>
+                  <AvatarImage
+                    source={{
+                      uri: item.User.avatar,
+                    }}
+                    className="w-12 h-12 rounded-full"
+                  />
+                </Avatar>
+                <VStack className="flex-1">
+                  <HStack className="items-center">
+                    <Text size="md" bold>
+                      {item.User.username}
+                    </Text>
+                    <Text size="md" className="text-gray-500 mx-5 ">
+                      .
+                    </Text>
+
+                    <Text size="md" className="text-gray-500 text-xs ">
+                      {new Date(item.created_at).toLocaleDateString()}
+                    </Text>
+                  </HStack>
+                  <Text size="md">{item.text}</Text>;
+                </VStack>
+              </HStack>
+            );
+          }}
+        />
+      </VStack>
     </SafeAreaView>
   );
 };
