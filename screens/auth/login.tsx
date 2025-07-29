@@ -100,7 +100,7 @@ export default () => {
             <VStack className="items-center space-y-3 mt-6">
               <Pressable onPress={() => router.push("/(auth)/signup")}>
                 <Text className="text-gray-600">
-                  Don't have an account?{" "}
+                  Don't have an account?
                   <Text className="text-black font-semibold">Sign Up</Text>
                 </Text>
               </Pressable>
