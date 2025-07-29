@@ -8,50 +8,69 @@ import { Plus, MessageCircle, Heart, Repeat, Send } from "lucide-react-native";
 import { formatDistanceToNow } from "date-fns";
 import { Divider } from "@/components/ui/divider";
 import { Post } from "@/lib/types";
+import { Pressable } from "react-native";
+import { router } from "expo-router";
+// import { Image } from "react-native";
 
 export default ({ item }: { item: Post }) => {
+  //   const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}`;
   return (
-    <Card>
-      <HStack space="md">
-        <Avatar size="md">
-          <AvatarBadge>
-            <Plus size={12} color="white" />
-          </AvatarBadge>
-          <AvatarFallbackText>{item.User.username}</AvatarFallbackText>
-          <AvatarImage
-            source={{
-              uri: item.User.avatar,
-            }}
-            className="w-12 h-12 rounded-full"
-          />
-        </Avatar>
-        <VStack className="flex-1" space="md">
-          <HStack className="items-center" space="md">
-            <Text size="lg" bold>
-              {item.User.username}
-            </Text>
-            <Text size="md" className="text-gray-500 mx-5 ">
-              .
-            </Text>
+    <Pressable
+      onPress={() =>
+        router.push({
+          pathname: "/thread",
+          params: { id: item.id },
+        })
+      }
+    >
+      <Card>
+        <HStack space="md">
+          <Avatar size="md">
+            <AvatarBadge>
+              <Plus size={12} color="white" />
+            </AvatarBadge>
+            <AvatarFallbackText>{item.User.username}</AvatarFallbackText>
+            <AvatarImage
+              source={{
+                uri: item.User.avatar,
+              }}
+              className="w-12 h-12 rounded-full"
+            />
+          </Avatar>
+          <VStack className="flex-1" space="md">
+            <HStack className="items-center" space="md">
+              <Text size="lg" bold>
+                {item.User.username}
+              </Text>
+              <Text size="md" className="text-gray-500 mx-5 ">
+                .
+              </Text>
 
-            <Text size="md" className="text-gray-500 text-xs  ">
-              {item?.created_at &&
-                formatDistanceToNow(
-                  new Date(item.created_at) - new Date().getTimezoneOffset() * 6000,
-                  { addSuffix: true }
-                )}
-            </Text>
-          </HStack>
-          <Text size="lg">{item?.text}</Text>
-          <HStack className="items-center" space="lg">
-            <Heart size={20} color="gray" strokeWidth={1.5} />
-            <MessageCircle size={20} color="gray" strokeWidth={1.5} />
-            <Repeat size={20} color="gray" strokeWidth={1.5} />
-            <Send size={20} color="gray" strokeWidth={1.5} />
-          </HStack>
-        </VStack>
-      </HStack>
-      <Divider className="w-full" style={{ marginTop: 20 }} />
-    </Card>
+              <Text size="md" className="text-gray-500 text-xs  ">
+                {item?.created_at &&
+                  formatDistanceToNow(
+                    new Date(item.created_at) - new Date().getTimezoneOffset() * 6000,
+                    { addSuffix: true }
+                  )}
+              </Text>
+            </HStack>
+            <Text size="lg">{item?.text}</Text>
+            {/* {item?.file && (
+              <Image
+                source={{ uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}` }}
+                style={{ width: "100%", height: 200, borderRadius: 10 }}
+              />
+            )} */}
+            <HStack className="items-center" space="2xl">
+              <Heart size={20} color="gray" strokeWidth={1.5} />
+              <MessageCircle size={20} color="gray" strokeWidth={1.5} />
+              <Repeat size={20} color="gray" strokeWidth={1.5} />
+              <Send size={20} color="gray" strokeWidth={1.5} />
+            </HStack>
+          </VStack>
+        </HStack>
+        <Divider className="w-full" style={{ marginTop: 20 }} />
+      </Card>
+    </Pressable>
   );
 };

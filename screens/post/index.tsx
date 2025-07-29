@@ -11,7 +11,7 @@ import { Avatar, AvatarImage, AvatarFallbackText } from "@/components/ui/avatar"
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAuth } from "@/providers/AuthProvider";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import * as Crypto from "expo-crypto";
 import { Button, ButtonText } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
@@ -21,11 +21,12 @@ import { Post } from "@/lib/types";
 import PostCard from "./card";
 
 export default () => {
+  const { threadId } = useLocalSearchParams();
   const { user } = useAuth();
   const DefaultPost: Post = {
     id: Crypto.randomUUID(),
     user_id: user.id,
-    parent_id: null,
+    parent_id: (threadId as string) ?? null,
     text: "",
   };
 
@@ -36,16 +37,15 @@ export default () => {
   }, []);
 
   const onPress = async () => {
-    console.log(posts);
     if (!user) return;
-
+    console.log(posts);
     const { data, error } = await supabase.from("Post").insert(posts);
     console.log(data, error);
     if (!error) router.back();
   };
 
-  const updatePost = (id: string, text: string) => {
-    setPosts(posts.map((p: Post) => (p.id === id ? { ...p, text } : p)));
+  const updatePost = (id: string, key: string, value: string) => {
+    setPosts(posts.map((p: Post) => (p.id === id ? { ...p, [key]: value } : p)));
   };
 
   return (

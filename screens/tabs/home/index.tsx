@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Pressable, SafeAreaView, View } from "react-native";
+import { FlatList, Pressable, SafeAreaView, View, Image } from "react-native";
 import { useAuth } from "@/providers/AuthProvider";
 import StchdIcon from "@/assets/icons/stchd";
 import { HStack } from "@/components/ui/hstack";
@@ -117,6 +117,14 @@ export default () => {
                       </Text>
                     </HStack>
                     <Text size="lg">{item?.text}</Text>
+                    {item?.file && (
+                      <Image
+                        source={{
+                          uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}`,
+                        }}
+                        style={{ width: "100%", height: 200, borderRadius: 10 }}
+                      />
+                    )}
                     <HStack className="items-center" space="lg">
                       <Heart size={20} color="gray" strokeWidth={1.5} />
                       <MessageCircle size={20} color="gray" strokeWidth={1.5} />
