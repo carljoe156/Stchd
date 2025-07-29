@@ -17,15 +17,8 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { Divider } from "@/components/ui/divider";
 import { FlatList } from "react-native";
+import { Post } from "@/lib/types";
 import PostCard from "./card";
-
-interface Post {
-  id: string;
-  user_id: string;
-  parent_id?: string | null;
-  text: string;
-  created_at?: string;
-}
 
 export default () => {
   const { user } = useAuth();

@@ -4,35 +4,34 @@ import { useAuth } from "@/providers/AuthProvider";
 import StchdIcon from "@/assets/icons/stchd";
 import { HStack } from "@/components/ui/hstack";
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallbackText } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallbackText, AvatarBadge } from "@/components/ui/avatar";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from "lucide-react-native";
-import { router, usePathname } from "expo-router";
+import {
+  Images,
+  Camera,
+  ImagePlay,
+  Mic,
+  Hash,
+  MapPin,
+  Plus,
+  MessageCircle,
+  Heart,
+  Repeat,
+  Send,
+} from "lucide-react-native";
+import { router } from "expo-router";
 import { Divider } from "@/components/ui/divider";
-import { supabase } from "@/lib/supabase";
+import { usePosts } from "@/hooks/use-posts";
+import { formatDistanceToNow } from "date-fns";
 
 export default () => {
   const { user } = useAuth();
-  const [stich, setStiches] = React.useState([]);
-  const pathname = usePathname();
-
-  React.useEffect(() => {
-    if (pathname === "/") getStiches();
-  }, [pathname]);
-
-  const getStiches = async () => {
-    const { data, error } = await supabase
-      .from("Post")
-      .select("*, User(*)")
-      .is("parent_id", null)
-      .order("created_at", { ascending: false });
-    if (!error) setStiches(data);
-  };
+  const { data, refetch, isLoading } = usePosts();
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="bg-white">
       <View className="pt-10">
         <HStack className="items-center justify-center">
           <StchdIcon size={40} />
@@ -81,35 +80,53 @@ export default () => {
       <Divider />
       <VStack space="lg">
         <FlatList
-          data={stich}
+          data={data}
+          refreshing={isLoading}
+          onRefresh={refetch}
           renderItem={({ item }) => {
             return (
-              <HStack className="items-center p-3">
-                <Avatar size="md">
-                  <AvatarFallbackText>{item.User.username}</AvatarFallbackText>
-                  <AvatarImage
-                    source={{
-                      uri: item.User.avatar,
-                    }}
-                    className="w-12 h-12 rounded-full"
-                  />
-                </Avatar>
-                <VStack className="flex-1">
-                  <HStack className="items-center">
-                    <Text size="md" bold>
-                      {item.User.username}
-                    </Text>
-                    <Text size="md" className="text-gray-500 mx-5 ">
-                      .
-                    </Text>
+              <Card>
+                <HStack space="md">
+                  <Avatar size="md">
+                    <AvatarBadge>
+                      <Plus size={12} color="white" />
+                    </AvatarBadge>
+                    <AvatarFallbackText>{item.User.username}</AvatarFallbackText>
+                    <AvatarImage
+                      source={{
+                        uri: item.User.avatar,
+                      }}
+                      className="w-12 h-12 rounded-full"
+                    />
+                  </Avatar>
+                  <VStack className="flex-1" space="md">
+                    <HStack className="items-center" space="md">
+                      <Text size="lg" bold>
+                        {item.User.username}
+                      </Text>
+                      <Text size="md" className="text-gray-500 mx-5 ">
+                        .
+                      </Text>
 
-                    <Text size="md" className="text-gray-500 text-xs ">
-                      {new Date(item.created_at).toLocaleDateString()}
-                    </Text>
-                  </HStack>
-                  <Text size="md">{item?.text}</Text>
-                </VStack>
-              </HStack>
+                      <Text size="md" className="text-gray-500 text-xs  ">
+                        {item?.created_at &&
+                          formatDistanceToNow(
+                            new Date(item.created_at) - new Date().getTimezoneOffset() * 6000,
+                            { addSuffix: true }
+                          )}
+                      </Text>
+                    </HStack>
+                    <Text size="lg">{item?.text}</Text>
+                    <HStack className="items-center" space="lg">
+                      <Heart size={20} color="gray" strokeWidth={1.5} />
+                      <MessageCircle size={20} color="gray" strokeWidth={1.5} />
+                      <Repeat size={20} color="gray" strokeWidth={1.5} />
+                      <Send size={20} color="gray" strokeWidth={1.5} />
+                    </HStack>
+                  </VStack>
+                </HStack>
+                <Divider className="w-full" style={{ marginTop: 20 }} />
+              </Card>
             );
           }}
         />

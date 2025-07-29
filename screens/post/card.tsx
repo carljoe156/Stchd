@@ -7,8 +7,15 @@ import { VStack } from "@/components/ui/vstack";
 import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
+import { Post } from "@/lib/types";
 
-export default ({ post, updatePost }: { post: any; updatePost: any }) => {
+export default ({
+  post,
+  updatePost,
+}: {
+  post: Post;
+  updatePost: (id: string, text: string) => void;
+}) => {
   const { user } = useAuth();
 
   return (
