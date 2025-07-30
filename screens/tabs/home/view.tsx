@@ -8,12 +8,11 @@ import { Plus, MessageCircle, Heart, Repeat, Send } from "lucide-react-native";
 import { formatDistanceToNow } from "date-fns";
 import { Divider } from "@/components/ui/divider";
 import { Post } from "@/lib/types";
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import { router } from "expo-router";
-// import { Image } from "react-native";
+import { Image } from "react-native";
 
 export default ({ item }: { item: Post }) => {
-  //   const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}`;
   return (
     <Pressable
       onPress={() =>
@@ -38,29 +37,38 @@ export default ({ item }: { item: Post }) => {
             />
           </Avatar>
           <VStack className="flex-1" space="md">
-            <HStack className="items-center" space="md">
-              <Text size="lg" bold>
-                {item.User.username}
-              </Text>
-              <Text size="md" className="text-gray-500 mx-5 ">
-                .
-              </Text>
+            <VStack>
+              <HStack className="items-center" space="md">
+                <Text size="lg" bold>
+                  {item.User.username}
+                </Text>
+                <Text size="md" className="text-gray-500 mx-5 ">
+                  .
+                </Text>
 
-              <Text size="md" className="text-gray-500 text-xs  ">
-                {item?.created_at &&
-                  formatDistanceToNow(
-                    new Date(item.created_at) - new Date().getTimezoneOffset() * 6000,
-                    { addSuffix: true }
-                  )}
-              </Text>
-            </HStack>
+                <Text size="md" className="text-gray-500 text-xs  ">
+                  {item?.created_at &&
+                    formatDistanceToNow(
+                      new Date(item.created_at) - new Date().getTimezoneOffset() * 6000,
+                      { addSuffix: true }
+                    )}
+                </Text>
+              </HStack>
+              {item?.Place?.name && (
+                <Text size="xs" bold className="text-gray-500">
+                  📍{item?.Place?.name}
+                </Text>
+              )}
+            </VStack>
             <Text size="lg">{item?.text}</Text>
-            {/* {item?.file && (
+            {item?.file && (
               <Image
-                source={{ uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}` }}
+                source={{
+                  uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`,
+                }}
                 style={{ width: "100%", height: 200, borderRadius: 10 }}
               />
-            )} */}
+            )}
             <HStack className="items-center" space="2xl">
               <Heart size={20} color="gray" strokeWidth={1.5} />
               <MessageCircle size={20} color="gray" strokeWidth={1.5} />

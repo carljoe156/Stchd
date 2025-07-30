@@ -99,7 +99,16 @@ export default ({ post }: PostCardProps) => {
           </Pressable>
           <Mic size={24} color="gray" strokeWidth={1.5} />
           <Hash size={24} color="gray" strokeWidth={1.5} />
-          <MapPin size={24} color="gray" strokeWidth={1.5} />
+          <Pressable
+            onPress={() => {
+              router.push({
+                pathname: "/places",
+                params: { threadId: post.id },
+              });
+            }}
+          >
+            <MapPin size={24} color="gray" strokeWidth={1.5} />
+          </Pressable>
         </HStack>
       </VStack>
     </HStack>
