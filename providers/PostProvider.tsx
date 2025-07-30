@@ -25,6 +25,7 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
     parent_id: null,
     text: "",
     file: null,
+    place_id: null,
   };
 
   const [posts, setPosts] = React.useState<Post[]>([DefaultPost]);
