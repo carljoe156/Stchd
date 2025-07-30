@@ -23,8 +23,20 @@ model Post {
   user       User     @relation("User", fields: [user_id], references: [id], onDelete: Cascade)
   parent_id  String?
   parent     Post?    @relation(name: "Posts", fields: [parent_id], references: [id], onDelete: Cascade)
+  place_id   String?
+  place      Place?   @relation(fields: [place_id], references: [id])
   text       String
   file       String?
   Post       Post[]   @relation("Posts")
   created_at DateTime @default(now())
+}
+
+model Place {
+  id         String   @id
+  name       String
+  latitude   Float
+  longitude  Float
+  address    String?
+  created_at DateTime @default(now())
+  posts      Post[]
 }
