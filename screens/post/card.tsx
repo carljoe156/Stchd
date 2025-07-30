@@ -87,7 +87,16 @@ export default ({ post }: PostCardProps) => {
           >
             <Camera size={24} color="gray" strokeWidth={1.5} />
           </Pressable>
-          <ImagePlay size={24} color="gray" strokeWidth={1.5} />
+          <Pressable
+            onPress={() => {
+              router.push({
+                pathname: "/gif",
+                params: { threadId: post.id },
+              });
+            }}
+          >
+            <ImagePlay size={24} color="gray" strokeWidth={1.5} />
+          </Pressable>
           <Mic size={24} color="gray" strokeWidth={1.5} />
           <Hash size={24} color="gray" strokeWidth={1.5} />
           <MapPin size={24} color="gray" strokeWidth={1.5} />
