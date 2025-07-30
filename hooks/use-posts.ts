@@ -4,10 +4,10 @@ import { supabase } from "@/lib/supabase";
 export const getPosts = async () => {
   const { data, error } = await supabase
     .from("Post")
-    .select("*, User(*)")
+    .select("*, User(*), Place(name)")
     .is("parent_id", null)
     .order("created_at", { ascending: false });
-  return data;
+  if (!error) return data;
 };
 
 export const usePosts = () => {
