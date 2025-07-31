@@ -13,6 +13,7 @@ export interface Post {
   created_at?: string;
   User?: User;
   Post?: Post[];
+  tag_mame?: string | null;
 }
 
 export interface Place {
@@ -22,4 +23,8 @@ export interface Place {
   latitude: number;
   longitude: number;
   address: string;
+}
+
+export interface Tag {
+  name: string;
 }
