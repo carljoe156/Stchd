@@ -27,6 +27,8 @@ model Post {
   place      Place?   @relation(fields: [place_id], references: [id])
   text       String
   file       String?
+  tag_name   String?
+  Tags       Tag?     @relation(fields: [tag_name], references: [name])
   Post       Post[]   @relation("Posts")
   created_at DateTime @default(now())
 }
@@ -38,5 +40,12 @@ model Place {
   longitude  Float
   address    String?
   created_at DateTime @default(now())
+  posts      Post[]
+}
+
+model Tag {
+  name       String   @id
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
   posts      Post[]
 }
