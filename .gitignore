@@ -40,3 +40,5 @@ app-example
 
 .env
 /lib/generated/prisma
+android/
+ios/
