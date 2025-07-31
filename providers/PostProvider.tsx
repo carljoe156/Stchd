@@ -13,6 +13,8 @@ export const PostContext = React.createContext({
   uploadFile: (id: string, uri: string, type: string, name: string) => {},
   setPhoto: (uri: string) => {},
   photo: "",
+  placeName: "",
+  setPlaceName: (name: string) => {},
 });
 
 export const usePost = () => React.useContext(PostContext);
@@ -30,6 +32,7 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [posts, setPosts] = React.useState<Post[]>([DefaultPost]);
   const [photo, setPhoto] = React.useState<String>("");
+  const [placeName, setPlaceName] = React.useState("");
 
   //   React.useEffect(() => {
   //     if (!user) updatePost(posts[0].id, "user_id", user.id);
@@ -80,12 +83,24 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
 
   const clearPosts = () => {
     // setPosts([{ ...DefaultPost, user_id: user?.id || "" }]);
+    setPhoto("");
+    setPlaceName("");
     setPosts([DefaultPost]);
   };
 
   return (
     <PostContext.Provider
-      value={{ posts, uploadPosts, addThread, updatePost, uploadFile, clearPosts, setPhoto, photo }}
+      value={{
+        posts,
+        uploadPosts,
+        addThread,
+        updatePost,
+        uploadFile,
+        clearPosts,
+        setPhoto,
+        photo,
+        placeName,
+      }}
     >
       {children}
     </PostContext.Provider>
