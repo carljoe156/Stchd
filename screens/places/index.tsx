@@ -23,7 +23,7 @@ export default () => {
     longitude: 0,
   });
   const { data, isLoading, error } = useLocations(debouncedSearch, location);
-  const { updatePost } = usePost();
+  const { updatePost, setPlaceName } = usePost();
 
   React.useEffect(() => {
     getCurrentLocation();
@@ -40,9 +40,10 @@ export default () => {
         address: place?.vicinity || place?.formatted_address,
       })
       .select();
-    console.log(data, error);
+
     if (!error) {
       updatePost(threadId, "place_id", data?.[0]?.id);
+      setPlaceName(place.name);
       router.back();
     }
   };
