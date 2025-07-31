@@ -5,15 +5,16 @@ import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar"
 import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
 import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from "lucide-react-native";
-import { Input, InputField } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
 import { Post } from "@/lib/types";
 import { Pressable, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { supabase } from "@/lib/supabase";
 import { router, useLocalSearchParams } from "expo-router";
 import { usePost } from "@/providers/PostProvider";
+import { Text } from "@/components/ui/text";
 import Audio from "./audio";
+import Input from "./input";
+import { supabase } from "@/lib/supabase";
 
 interface PostCardProps {
   post: Post;
@@ -22,8 +23,25 @@ interface PostCardProps {
 export default ({ post }: PostCardProps) => {
   const { threadId } = useLocalSearchParams;
   const { user } = useAuth();
-  const { uploadFile, updatePost, photo, setPhoto } = usePost();
+  const { uploadFile, updatePost, photo, setPhoto, placeName } = usePost();
   const [showAudio, setShowAudio] = React.useState(false);
+  const regex = /([#@]\w+)|([^#@]+)/g;
+  const textArray = post?.text?.match(regex) || [];
+
+  React.useEffect(() => {
+    let index = textArray?.findIndex((text) => text.startsWith("#"));
+    if (index !== -1 && index !== textArray?.length - 1) {
+      createTag(textArray[index]);
+    }
+  }, [textArray]);
+
+  const createTag = async (text: string) => {
+    const { data, error } = await supabase
+      .from("Tag")
+      .upsert({ name: text, updated_at: new Date() })
+      .select();
+    if (!error) updatePost(post.id, "tag_name", data?.[0]?.name);
+  };
 
   React.useEffect(() => {
     if (!threadId) return;
@@ -44,7 +62,6 @@ export default ({ post }: PostCardProps) => {
     let name = uri?.split("/").pop();
 
     setPhoto(uri);
-    // uploadFile(id, uri, type, name);
     uploadFile(post.id, uri, type, name);
   };
 
@@ -61,21 +78,21 @@ export default ({ post }: PostCardProps) => {
         </Avatar>
       </VStack>
 
-      <Divider orientation="vertical" className="h-16" />
-      <VStack className="p-3" space="lg">
-        <VStack className="flex-1">
-          <Heading size="md" className="mb-1">
-            {user?.username}
-          </Heading>
-
-          <Input size="md" className="border-0">
-            <InputField
-              placeholder="What's new?"
-              className="px-0"
-              value={post.text}
-              onChangeText={(text) => updatePost(post.id, "text", text)}
-            />
-          </Input>
+      {/* <Divider orientation="vertical" className="h-16" /> */}
+      <Divider orientation="vertical" style={{ height: photo ? 160 : 60 }} />
+      <VStack>
+        <VStack className="p-3" space="lg">
+          <VStack className="flex-1">
+            <Heading size="md" className="mb-1">
+              {user?.username}
+            </Heading>
+            {placeName && (
+              <Text size="xs" bold>
+                {placeName}
+              </Text>
+            )}
+          </VStack>
+          <Input post={post} updatePost={updatePost} textArray={textArray} />
           {photo && (
             <Image source={{ uri: photo }} style={{ width: 100, height: 100, borderRadius: 10 }} />
           )}

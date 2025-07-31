@@ -12,10 +12,13 @@ import { Pressable, View } from "react-native";
 import { router } from "expo-router";
 import { Image } from "react-native";
 import Audio from "@/screens/post/audio";
+import { renderText } from "@/screens/post/input";
 
 export default ({ item }: { item: Post }) => {
   const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`;
   const fileType = item.file?.split(".").pop();
+  const regex = /([#@]\w+)|([^#@]+)/g;
+  const textArray = item?.text?.match(regex) || [];
   return (
     <Pressable
       onPress={() =>
@@ -28,7 +31,10 @@ export default ({ item }: { item: Post }) => {
       <Card>
         <HStack space="md">
           <Avatar size="md">
-            <AvatarBadge>
+            <AvatarBadge
+              size="lg"
+              style={{ backgroundColor: "black", alignItems: "center", justifyContent: "center" }}
+            >
               <Plus size={12} color="white" />
             </AvatarBadge>
             <AvatarFallbackText>{item?.User?.username}</AvatarFallbackText>
@@ -63,7 +69,7 @@ export default ({ item }: { item: Post }) => {
                 </Text>
               )}
             </VStack>
-            <Text size="lg">{item?.text}</Text>
+            {renderText(textArray)}
             {item?.file ? (
               fileType === "m4a" ? (
                 <Audio id={item.id} uri={imageUrl} />
