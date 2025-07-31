@@ -54,8 +54,7 @@ export default () => {
       return;
     }
     let location = await Location.getCurrentPositionAsync({});
-    // setLocation(location);
-    // console.log(location.coords);
+
     setLocation({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
