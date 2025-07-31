@@ -11,16 +11,24 @@ import { Post } from "@/lib/types";
 import { Pressable, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "@/lib/supabase";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { usePost } from "@/providers/PostProvider";
+import Audio from "./audio";
 
 interface PostCardProps {
   post: Post;
 }
 
 export default ({ post }: PostCardProps) => {
+  const { threadId } = useLocalSearchParams;
   const { user } = useAuth();
   const { uploadFile, updatePost, photo, setPhoto } = usePost();
+  const [showAudio, setShowAudio] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!threadId) return;
+    updatePost(post.id, "parent_id", threadId as string);
+  }, [threadId]);
 
   const addPhoto = async () => {
     setPhoto("");
@@ -71,6 +79,7 @@ export default ({ post }: PostCardProps) => {
           {photo && (
             <Image source={{ uri: photo }} style={{ width: 100, height: 100, borderRadius: 10 }} />
           )}
+          {showAudio && <Audio id={post.id} userId={""} />}
         </VStack>
         <HStack className="items-center" space="3xl">
           <Pressable onPress={addPhoto}>
@@ -97,7 +106,9 @@ export default ({ post }: PostCardProps) => {
           >
             <ImagePlay size={24} color="gray" strokeWidth={1.5} />
           </Pressable>
-          <Mic size={24} color="gray" strokeWidth={1.5} />
+          <Pressable onPress={() => setShowAudio(!showAudio)}>
+            <Mic size={24} color="gray" strokeWidth={1.5} />
+          </Pressable>
           <Hash size={24} color="gray" strokeWidth={1.5} />
           <Pressable
             onPress={() => {

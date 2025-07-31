@@ -11,8 +11,11 @@ import { Post } from "@/lib/types";
 import { Pressable, View } from "react-native";
 import { router } from "expo-router";
 import { Image } from "react-native";
+import Audio from "@/screens/post/audio";
 
 export default ({ item }: { item: Post }) => {
+  const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`;
+  const fileType = item.file?.split(".").pop();
   return (
     <Pressable
       onPress={() =>
@@ -28,10 +31,10 @@ export default ({ item }: { item: Post }) => {
             <AvatarBadge>
               <Plus size={12} color="white" />
             </AvatarBadge>
-            <AvatarFallbackText>{item.User.username}</AvatarFallbackText>
+            <AvatarFallbackText>{item?.User?.username}</AvatarFallbackText>
             <AvatarImage
               source={{
-                uri: item.User.avatar,
+                uri: item?.User?.avatar,
               }}
               className="w-12 h-12 rounded-full"
             />
@@ -40,7 +43,7 @@ export default ({ item }: { item: Post }) => {
             <VStack>
               <HStack className="items-center" space="md">
                 <Text size="lg" bold>
-                  {item.User.username}
+                  {item?.User?.username}
                 </Text>
                 <Text size="md" className="text-gray-500 mx-5 ">
                   .
@@ -49,7 +52,7 @@ export default ({ item }: { item: Post }) => {
                 <Text size="md" className="text-gray-500 text-xs  ">
                   {item?.created_at &&
                     formatDistanceToNow(
-                      new Date(item.created_at) - new Date().getTimezoneOffset() * 6000,
+                      new Date(item?.created_at) - new Date().getTimezoneOffset() * 6000,
                       { addSuffix: true }
                     )}
                 </Text>
@@ -61,14 +64,25 @@ export default ({ item }: { item: Post }) => {
               )}
             </VStack>
             <Text size="lg">{item?.text}</Text>
-            {item?.file && (
+            {item?.file ? (
+              fileType === "m4a" ? (
+                <Audio id={item.id} uri={imageUrl} />
+              ) : (
+                <Image
+                  source={{ uri: imageUrl }}
+                  style={{ width: 300, height: 300, borderRadius: 10 }}
+                />
+              )
+            ) : null}
+
+            {/* {item?.file && (
               <Image
                 source={{
-                  uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`,
+                  uri: imageUrl,
                 }}
                 style={{ width: "100%", height: 200, borderRadius: 10 }}
               />
-            )}
+            )} */}
             <HStack className="items-center" space="2xl">
               <Heart size={20} color="gray" strokeWidth={1.5} />
               <MessageCircle size={20} color="gray" strokeWidth={1.5} />
