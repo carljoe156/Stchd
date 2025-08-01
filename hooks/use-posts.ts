@@ -4,7 +4,9 @@ import { supabase } from "@/lib/supabase";
 export const getPosts = async () => {
   const { data, error } = await supabase
     .from("Post")
-    .select("*, User(*), Place(name)")
+    .select(
+      "*, Place(name), Like(user_id), repost_user:User!repost_user_id(*), user:User!user_id(*)"
+    )
     .is("parent_id", null)
     .order("created_at", { ascending: false });
   if (!error) return data;
