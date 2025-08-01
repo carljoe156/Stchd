@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 export const getThread = async (id: string) => {
   const { data, error } = await supabase
     .from("Post")
-    .select("*, User(*), Place(name), Post(*, User(*))")
+    .select("*, user:User!user_id(*), Place(name), Post(*, user:User!user_id(*))")
     .eq("id", id)
     // .filter('id', 'eq', id)
     .order("created_at", { ascending: false });
