@@ -3,6 +3,7 @@ import React from "react";
 import { Post } from "@/lib/types";
 import * as Crypto from "expo-crypto";
 import { useAuth } from "./AuthProvider";
+import { router } from "expo-router";
 
 export const PostContext = React.createContext({
   posts: [],
@@ -34,16 +35,6 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
   const [photo, setPhoto] = React.useState<String>("");
   const [placeName, setPlaceName] = React.useState("");
 
-  //   React.useEffect(() => {
-  //     if (!user) updatePost(posts[0].id, "user_id", user.id);
-  //   }, [posts]);
-
-  React.useEffect(() => {
-    if (user?.id && posts[0].user_id !== user.id) {
-      setPosts([DefaultPost]);
-    }
-  }, [user?.id]);
-
   const uploadFile = async (id: string, uri: string, type: string, name: string) => {
     let newFormData = new FormData();
     newFormData.append("file", {
@@ -62,23 +53,48 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
     setPosts([...posts, { ...DefaultPost, parent_id: posts[0].id }]);
   };
 
+  // const uploadPosts = async () => {
+  //   try {
+  //     const { data, error } = await supabase.from("Post").insert(posts);
+  //     if (error) {
+  //       console.error("Database insert error:", error);
+  //       return null;
+  //     }
+  //     console.log("Posts uploaded successfully:", data);
+  //     return data || true;
+  //   } catch (error) {
+  //     console.error("Upload posts failed:", error);
+  //     return null;
+  //   }
+  // };
+
   const uploadPosts = async () => {
-    try {
-      const { data, error } = await supabase.from("Post").insert(posts);
-      if (error) {
-        console.error("Database insert error:", error);
-        return null;
-      }
-      console.log("Posts uploaded successfully:", data);
-      return data || true;
-    } catch (error) {
-      console.error("Upload posts failed:", error);
-      return null;
+    const { data, error } = await supabase.from("Post").insert(posts);
+
+    if (error) {
+      console.error("Upload error:", error);
+      return false;
     }
+
+    return true;
   };
 
+  // const uploadPosts = async () => {
+  //   const { data, error } = await supabase.from("Post").insert(posts);
+  //   if (!error) {
+  //     clearPosts();
+  //     router.back();
+  //   }
+  //   if (!error) console.error(error);
+  // };
+
   const updatePost = (id: string, key: string, value: string) => {
-    setPosts(posts.map((p: Post) => (p.id === id ? { ...p, [key]: value } : p)));
+    setPosts(
+      posts.map((p: Post) => {
+        if (p.id === id) return { ...p, [key]: value, user_id: user?.id };
+        return { ...p, user_id: user?.id };
+      })
+    );
   };
 
   const clearPosts = () => {
