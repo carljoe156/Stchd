@@ -29,6 +29,7 @@ import PostView from "./view";
 export default () => {
   const { user } = useAuth();
   const { data, refetch, isLoading } = usePosts();
+  const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user.id}/avatar.jpeg`;
 
   return (
     <SafeAreaView className="bg-white">
@@ -48,7 +49,7 @@ export default () => {
             <AvatarFallbackText>{user?.username}</AvatarFallbackText>
             <AvatarImage
               source={{
-                uri: user?.avatarUrl,
+                uri: avatarUrl,
               }}
               className="w-12 h-12 rounded-full"
             />

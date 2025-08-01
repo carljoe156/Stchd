@@ -20,6 +20,7 @@ import * as Crypto from "expo-crypto";
 export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
   const { user } = useAuth();
   const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`;
+  const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user.id}/avatar.jpeg`;
   const fileType = item.file?.split(".").pop();
   const regex = /([#@]\w+)|([^#@]+)/g;
   const textArray = item?.text?.match(regex) || [];
@@ -70,7 +71,7 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
           <AvatarFallbackText>{item?.user?.username}</AvatarFallbackText>
           <AvatarImage
             source={{
-              uri: item?.User?.avatar,
+              uri: avatarUrl,
             }}
             className="w-12 h-12 rounded-full"
           />
@@ -101,8 +102,8 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
                   <Pressable
                     onPress={() =>
                       router.push({
-                        pathname: `/profile`,
-                        params: { id: item?.repost_user_id },
+                        pathname: `/user`,
+                        params: { userId: item?.repost_user_id },
                       })
                     }
                   >
@@ -112,21 +113,30 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
                   </Pressable>
                 </HStack>
               )}
-              <HStack className="items-center" space="md">
-                <Text size="lg" bold>
-                  {item?.user?.username}
-                </Text>
-                <Text size="md" className="text-gray-500 mx-5">
-                  .
-                </Text>
-                <Text size="md" className="text-gray-500 text-xs">
-                  {item?.created_at &&
-                    formatDistanceToNow(
-                      new Date(item?.created_at) - new Date().getTimezoneOffset() * 6000,
-                      { addSuffix: true }
-                    )}
-                </Text>
-              </HStack>
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: `/user`,
+                    params: { userId: item?.user_id },
+                  })
+                }
+              >
+                <HStack className="items-center" space="md">
+                  <Text size="lg" bold>
+                    {item?.user?.username}
+                  </Text>
+                  <Text size="md" className="text-gray-500 mx-5">
+                    .
+                  </Text>
+                  <Text size="md" className="text-gray-500 text-xs">
+                    {item?.created_at &&
+                      formatDistanceToNow(
+                        new Date(item?.created_at) - new Date().getTimezoneOffset() * 6000,
+                        { addSuffix: true }
+                      )}
+                  </Text>
+                </HStack>
+              </Pressable>
 
               {item?.Place?.name && (
                 <Text size="xs" bold className="text-gray-500">
