@@ -83,7 +83,7 @@ export default () => {
           data={data}
           refreshing={isLoading}
           onRefresh={refetch}
-          renderItem={({ item }) => <PostView item={item} />}
+          renderItem={({ item }) => <PostView item={item} refetch={refetch} />}
         />
       </VStack>
     </SafeAreaView>

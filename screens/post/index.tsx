@@ -25,19 +25,34 @@ export default () => {
   const { posts, updatePost, addThread, uploadPosts, clearPosts } = usePost();
   const [isPosting, setIsPosting] = React.useState(false);
 
+  // const handlePost = async () => {
+  //   setIsPosting(true);
+  //   try {
+  //     const result = await uploadPosts();
+  //     if (result) {
+  //       clearPosts();
+  //       router.back();
+  //     } else {
+  //       Alert.alert("Error", "Failed to create post. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Post upload error:", error);
+  //     Alert.alert("Error", "Something went wrong. Please try again.");
+  //   } finally {
+  //     setIsPosting(false);
+  //   }
+  // };
+
   const handlePost = async () => {
     setIsPosting(true);
     try {
       const result = await uploadPosts();
-      if (result) {
+      if (result === true) {
         clearPosts();
         router.back();
-      } else {
-        Alert.alert("Error", "Failed to create post. Please try again.");
       }
-    } catch (error) {
-      console.error("Post upload error:", error);
-      Alert.alert("Error", "Something went wrong. Please try again.");
+    } catch (e) {
+      console.error("Unexpected post upload error:", e);
     } finally {
       setIsPosting(false);
     }
