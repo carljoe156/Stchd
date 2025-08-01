@@ -45,8 +45,11 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { data, error } = await supabase.storage
       .from(`files/${user?.id}`)
-      .upload(name, newFormData);
-    if (data) updatePost(id, "file", data.path);
+      .upload(name, newFormData, {
+        upsert: true,
+      });
+    // if (data) updatePost(id, "file", data.path);
+    return data?.path;
   };
 
   const addThread = () => {
