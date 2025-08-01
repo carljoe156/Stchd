@@ -15,22 +15,27 @@ model User {
   avatar     String?
   created_at DateTime @default(now())
   posts      Post[]   @relation("User")
+  repost     Post[]   @relation("RepostUser")
+  likes      Like[]
 }
 
 model Post {
-  id         String   @id
-  user_id    String
-  user       User     @relation("User", fields: [user_id], references: [id], onDelete: Cascade)
-  parent_id  String?
-  parent     Post?    @relation(name: "Posts", fields: [parent_id], references: [id], onDelete: Cascade)
-  place_id   String?
-  place      Place?   @relation(fields: [place_id], references: [id])
-  text       String
-  file       String?
-  tag_name   String?
-  Tags       Tag?     @relation(fields: [tag_name], references: [name])
-  Post       Post[]   @relation("Posts")
-  created_at DateTime @default(now())
+  id             String   @id
+  user_id        String
+  user           User     @relation("User", fields: [user_id], references: [id], onDelete: Cascade)
+  parent_id      String?
+  parent         Post?    @relation(name: "Posts", fields: [parent_id], references: [id], onDelete: Cascade)
+  place_id       String?
+  place          Place?   @relation(fields: [place_id], references: [id])
+  text           String
+  file           String?
+  repost_user_id String?
+  repost_user    User?    @relation("RepostUser", fields: [repost_user_id], references: [id])
+  tag_name       String?
+  Tags           Tag?     @relation(fields: [tag_name], references: [name])
+  Post           Post[]   @relation("Posts")
+  likes          Like[]
+  created_at     DateTime @default(now())
 }
 
 model Place {
@@ -48,4 +53,13 @@ model Tag {
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
   posts      Post[]
+}
+
+model Like {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()"))
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post_id    String
+  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
 }
