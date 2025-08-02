@@ -4,32 +4,20 @@ import { useAuth } from "@/providers/AuthProvider";
 import StchdIcon from "@/assets/icons/stchd";
 import { HStack } from "@/components/ui/hstack";
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallbackText, AvatarBadge } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallbackText } from "@/components/ui/avatar";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import {
-  Images,
-  Camera,
-  ImagePlay,
-  Mic,
-  Hash,
-  MapPin,
-  Plus,
-  MessageCircle,
-  Heart,
-  Repeat,
-  Send,
-} from "lucide-react-native";
+import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from "lucide-react-native";
 import { router } from "expo-router";
 import { Divider } from "@/components/ui/divider";
 import { usePosts } from "@/hooks/use-posts";
-import PostView from "./view";
+import PostView from "@/components/shared/post-view";
 
 export default () => {
   const { user } = useAuth();
-  const { data, refetch, isLoading } = usePosts();
-  const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user.id}/avatar.jpeg`;
+  const { data, refetch, isLoading } = usePosts({ key: "parent_id", value: null, type: "is" });
+  const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
 
   return (
     <SafeAreaView className="bg-white">

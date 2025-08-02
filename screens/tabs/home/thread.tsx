@@ -7,18 +7,16 @@ import { Divider } from "@/components/ui/divider";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { useLocalSearchParams, router } from "expo-router";
-import { useThread } from "@/hooks/use-thread";
 import { ChevronLeft } from "lucide-react-native";
-import PostView from "./view";
+import PostView from "@/components/shared/post-view";
+import { usePosts } from "@/hooks/use-posts";
 
 export default () => {
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
-  const { data, isLoading, error, refetch } = useThread(id as string);
+  const { data, refetch } = usePosts({ key: "id", value: id as string, type: "eq" });
 
   if (!data) return null;
-  const thread = data[0];
-  const replies = data.slice(1);
 
   return (
     <SafeAreaView className="bg-white flex-1 pt-10">
@@ -31,7 +29,7 @@ export default () => {
         <View className="w-20" />
       </HStack>
       <VStack space="md">
-        <PostView item={data[0]} />
+        <PostView item={data[0]} refetch={refetch} />
         {/* <Divider /> */}
         <Text className="text-lg font-bold text-black px-3">Replies</Text>
         <Divider />
@@ -55,7 +53,7 @@ export default () => {
               </HStack>
             </Pressable>
           )}
-          renderItem={({ item }) => <PostView item={item} />}
+          renderItem={({ item }) => <PostView item={item} refetch={refetch} />}
         />
       </VStack>
     </SafeAreaView>
