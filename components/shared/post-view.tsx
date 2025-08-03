@@ -51,7 +51,7 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
       file: item.file,
       place_id: item.place_id,
       tag_name: item.tag_name,
-      // parent_id: item.id,
+      parent_id: item.id,
       repost_user_id: user?.id,
     };
 
@@ -129,12 +129,18 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
                   <Text size="md" className="text-gray-500 mx-5">
                     .
                   </Text>
-                  <Text size="md" className="text-gray-500 text-xs">
+                  {/* <Text size="md" className="text-gray-500 text-xs">
                     {item?.created_at &&
                       formatDistanceToNow(
                         new Date(item?.created_at) - new Date().getTimezoneOffset() * 6000,
                         { addSuffix: true }
                       )}
+                  </Text> */}
+                  <Text size="md" className="text-gray-500 text-xs">
+                    {item?.created_at &&
+                      formatDistanceToNow(new Date(item.created_at), {
+                        addSuffix: true,
+                      })}
                   </Text>
                 </HStack>
               </Pressable>
