@@ -5,7 +5,13 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { User } from "@/lib/types";
 import { HStack } from "@/components/ui/hstack";
-import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallbackText,
+  AvatarGroup,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { Plus } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { usePost } from "@/providers/PostProvider";
@@ -13,6 +19,7 @@ import { usePosts } from "@/hooks/use-posts";
 import { VStack } from "@/components/ui/vstack";
 import PostView from "@/components/shared/post-view";
 import BottomSheet from "@/components/shared/bottom-sheet";
+import { useFollowers } from "@/hooks/use-followers";
 
 enum Tab {
   THREADS = "Threads",
@@ -36,12 +43,15 @@ const Tabs = [
 ];
 
 export default ({ user }: { user: User }) => {
-  const { logOut } = useAuth();
+  //   const { logOut } = useAuth();
+  const { user: authUser } = useAuth();
+  const isOwner = authUser?.id === user?.id;
   const [tab, setTab] = React.useState<(typeof Tabs)[number]>(Tabs[0]);
   //    const [photo, setPhoto] = React.useState<String>('');
   const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
   const { data, isLoading, refetch } = usePosts({ key: tab.key, value: user?.id, type: "eq" });
   const [showActionSheet, setShowActionSheet] = React.useState(false);
+  const { data: followers } = useFollowers(user?.id);
   const { uploadFile } = usePost();
 
   const addPhoto = async () => {
@@ -87,10 +97,36 @@ export default ({ user }: { user: User }) => {
   return (
     <SafeAreaView className="flex-1 pt-10 bg-white">
       <HStack className="items-center justify-between p-3">
-        <Text size="3xl" bold className="text-black">
-          {user?.username}
-        </Text>
-        <Pressable onPress={addPhoto}>
+        <VStack>
+          <Text size="3xl" bold className="text-black">
+            {user?.username}
+          </Text>
+          {followers && (
+            <AvatarGroup>
+              {followers.slice(0, 3).map((item, index) => {
+                const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user?.id}/avatar.jpeg`;
+                return (
+                  <Avatar key={index} size="sm" className={"border-2 border-outline-0"}>
+                    <AvatarFallbackText className="text-white">
+                      {item?.user?.username}
+                    </AvatarFallbackText>
+                    <AvatarImage
+                      source={{
+                        uri: avatarUrl,
+                      }}
+                    />
+                  </Avatar>
+                );
+              })}
+              {followers.length > 3 && (
+                <Avatar size="sm" className={"border-2 border-outline-0"}>
+                  <AvatarFallbackText>{"+ " + (followers.length - 3) + ""}</AvatarFallbackText>
+                </Avatar>
+              )}
+            </AvatarGroup>
+          )}
+        </VStack>
+        <Pressable onPress={isOwner ? addPhoto : () => {}}>
           <Avatar size="lg">
             <AvatarBadge
               size="lg"
@@ -112,14 +148,14 @@ export default ({ user }: { user: User }) => {
           variant="outline"
           className="flex-1 border-gray-400 rounded-xl"
         >
-          <ButtonText>Edit profile</ButtonText>
+          <Text bold>Edit profile</Text>
         </Button>
         <Button
           onPress={shareProfile}
           variant="outline"
           className="flex-1 border-gray-400 rounded-xl"
         >
-          <ButtonText>Share profile</ButtonText>
+          <Text bold>Share profile</Text>
         </Button>
       </HStack>
 
