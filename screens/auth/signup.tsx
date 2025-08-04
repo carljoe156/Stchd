@@ -1,10 +1,4 @@
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Alert,
-  Pressable,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, Alert, Pressable } from "react-native";
 import { Input, InputField } from "@/components/ui/input";
 import React from "react";
 import { Text } from "@/components/ui/text";
@@ -47,19 +41,14 @@ export default () => {
     if (error) {
       Alert.alert("Sign Up Error", error.message);
     } else {
-      Alert.alert(
-        "Success!",
-        "Account created successfully. Check your email for verification.",
-        [{ text: "OK", onPress: () => router.push("./auth/login") }]
-      );
+      Alert.alert("Success!", "Account created successfully. Check your email for verification.", [
+        { text: "OK", onPress: () => router.push("./auth/login") },
+      ]);
     }
   };
 
   return (
-    <Layout
-      onPress={handleSignUp}
-      buttonText={loading ? "Creating Account..." : "Create Account"}
-    >
+    <Layout onPress={handleSignUp} buttonText={loading ? "Creating Account..." : "Create Account"}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -74,9 +63,7 @@ export default () => {
           keyboardShouldPersistTaps="handled"
         >
           <VStack className="items-center space-y-6">
-            <Text className="text-2xl font-bold text-black text-center">
-              Create Account
-            </Text>
+            <Text className="text-2xl font-bold text-black text-center">Create Account</Text>
             <Text className="text-gray-600 text-center">Join us today</Text>
 
             <VStack className="space-y-4">
@@ -125,15 +112,13 @@ export default () => {
             <VStack className="items-center space-y-3 mt-6">
               <Pressable onPress={() => router.push("/(auth)/login")}>
                 <Text className="text-gray-600">
-                  Already have an account?{" "}
+                  Already have an account?
                   <Text className="text-black font-semibold">Sign In</Text>
                 </Text>
               </Pressable>
 
               <Pressable onPress={() => router.push("/(auth)/phone")}>
-                <Text className="text-gray-600 underline">
-                  Use phone number instead
-                </Text>
+                <Text className="text-gray-600 underline">Use phone number instead</Text>
               </Pressable>
             </VStack>
           </VStack>
