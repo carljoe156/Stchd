@@ -1,11 +1,4 @@
-// /app/auth/login.tsx
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Alert,
-  Pressable,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, Alert, Pressable } from "react-native";
 import { Input, InputField } from "@/components/ui/input";
 import React from "react";
 import { Text } from "@/components/ui/text";
@@ -43,10 +36,7 @@ export default () => {
   };
 
   return (
-    <Layout
-      onPress={handleLogin}
-      buttonText={loading ? "Signing In..." : "Sign In"}
-    >
+    <Layout onPress={handleLogin} buttonText={loading ? "Signing In..." : "Sign In"}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -61,12 +51,8 @@ export default () => {
           keyboardShouldPersistTaps="handled"
         >
           <VStack className="items-center space-y-6">
-            <Text className="text-2xl font-bold text-black text-center">
-              Welcome Back
-            </Text>
-            <Text className="text-gray-600 text-center">
-              Sign in to your account
-            </Text>
+            <Text className="text-2xl font-bold text-black text-center">Welcome Back</Text>
+            <Text className="text-gray-600 text-center">Sign in to your account</Text>
 
             <VStack className="space-y-4">
               <Input
@@ -101,15 +87,13 @@ export default () => {
             <VStack className="items-center space-y-3 mt-6">
               <Pressable onPress={() => router.push("/(auth)/signup")}>
                 <Text className="text-gray-600">
-                  Don't have an account?{" "}
+                  Don't have an account?
                   <Text className="text-black font-semibold">Sign Up</Text>
                 </Text>
               </Pressable>
 
               <Pressable onPress={() => router.push("/(auth)/phone")}>
-                <Text className="text-gray-600 underline">
-                  Use phone number instead
-                </Text>
+                <Text className="text-gray-600 underline">Use phone number instead</Text>
               </Pressable>
             </VStack>
           </VStack>
