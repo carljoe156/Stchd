@@ -10,13 +10,15 @@ datasource db {
 }
 
 model User {
-  id         String   @id
-  username   String   @unique
+  id         String      @id
+  username   String      @unique
   avatar     String?
-  created_at DateTime @default(now())
-  posts      Post[]   @relation("User")
-  repost     Post[]   @relation("RepostUser")
+  created_at DateTime    @default(now())
+  posts      Post[]      @relation("User")
+  repost     Post[]      @relation("RepostUser")
   likes      Like[]
+  followers  Followers[] @relation("FollowingUser")
+  following  Followers[] @relation("User")
 }
 
 model Post {
@@ -62,4 +64,13 @@ model Like {
   post_id    String
   post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
   created_at DateTime @default(now())
+}
+
+model Followers {
+  id                String   @id @default(dbgenerated("uuid_generate_v4()"))
+  user_id           String
+  user              User     @relation("User", fields: [user_id], references: [id], onDelete: Cascade)
+  following_user_id String
+  following_user    User     @relation("FollowingUser", fields: [following_user_id], references: [id], onDelete: Cascade)
+  created_at        DateTime @default(now())
 }
