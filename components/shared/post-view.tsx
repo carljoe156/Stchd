@@ -16,6 +16,7 @@ import { renderText } from "@/screens/post/input";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/AuthProvider";
 import * as Crypto from "expo-crypto";
+import { useFollowing } from "@/hooks/use-following";
 
 export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
   const { user } = useAuth();
@@ -25,6 +26,7 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
   const regex = /([#@]\w+)|([^#@]+)/g;
   const textArray = item?.text?.match(regex) || [];
   const isLiked = item?.Like?.some((like: { user_id: string }) => like.user_id === user?.id);
+  const { data: following, refetch: refetchFollowing } = useFollowing(user?.id || "");
 
   const addLike = async () => {
     const { error } = await supabase.from("Like").insert({
@@ -41,6 +43,14 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
       .eq("user_id", user?.id)
       .eq("post_id", item.id);
     if (!error) refetch();
+  };
+
+  const followUser = async () => {
+    const { error } = await supabase.from("Followers").insert({
+      user_id: user?.id,
+      following_user_id: item?.user_id,
+    });
+    if (!error) refetchFollowing();
   };
 
   const addRepost = async () => {
@@ -62,28 +72,39 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
   return (
     <Card>
       <HStack space="md">
-        <Avatar size="md">
-          <AvatarBadge
-            size="lg"
-            style={{ backgroundColor: "black", alignItems: "center", justifyContent: "center" }}
-          >
-            <Plus size={12} color="white" />
-          </AvatarBadge>
-          <AvatarFallbackText>{item?.user?.username}</AvatarFallbackText>
-          <AvatarImage
-            source={{
-              uri: avatarUrl,
-            }}
-            className="w-12 h-12 rounded-full"
-          />
-        </Avatar>
-        {item?.parent_id && (
-          <Divider
-            orientation="vertical"
-            className="absolute"
-            style={{ height: 85, bottom: -50 }}
-          />
-        )}
+        <VStack className="items-center">
+          <Avatar size="md">
+            <AvatarFallbackText>{item?.user?.username}</AvatarFallbackText>
+            <AvatarImage
+              source={{
+                uri: avatarUrl,
+              }}
+              className="w-12 h-12 rounded-full"
+            />
+            {!following?.includes(item?.user_id) && user?.id !== item?.user_id && (
+              <AvatarBadge
+                size="xl"
+                style={{
+                  backgroundColor: "black",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "absolute",
+                }}
+              >
+                <Pressable onPress={followUser}>
+                  <Plus size={10} color="white" strokeWidth={5} />
+                </Pressable>
+              </AvatarBadge>
+            )}
+          </Avatar>
+          {item?.parent_id && (
+            <Divider
+              orientation="vertical"
+              className="absolute"
+              style={{ height: 85, bottom: -50 }}
+            />
+          )}
+        </VStack>
         <VStack className="flex-1" space="md">
           <Pressable
             onPress={() =>
@@ -95,7 +116,7 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
           >
             <VStack>
               {item?.repost_user && (
-                <HStack className="items-center" space="md">
+                <HStack className="items-center" space="sm">
                   <Repeat size={14} color="gray" strokeWidth={2} />
                   <Text size="sm" className="mx-2" bold>
                     Reposted By
@@ -126,21 +147,18 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
                   <Text size="lg" bold>
                     {item?.user?.username}
                   </Text>
-                  <Text size="md" className="text-gray-500 mx-5">
+                  <Text size="md" className="text-gray-500">
                     .
                   </Text>
-                  {/* <Text size="md" className="text-gray-500 text-xs">
-                    {item?.created_at &&
-                      formatDistanceToNow(
-                        new Date(item?.created_at) - new Date().getTimezoneOffset() * 6000,
-                        { addSuffix: true }
-                      )}
-                  </Text> */}
                   <Text size="md" className="text-gray-500 text-xs">
                     {item?.created_at &&
-                      formatDistanceToNow(new Date(item.created_at), {
-                        addSuffix: true,
-                      })}
+                      formatDistanceToNow(
+                        new Date(
+                          new Date(item?.created_at).getTime() -
+                            new Date().getTimezoneOffset() * 60000
+                        ),
+                        { addSuffix: true }
+                      )}
                   </Text>
                 </HStack>
               </Pressable>
