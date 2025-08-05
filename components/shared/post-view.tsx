@@ -18,14 +18,22 @@ import { useAuth } from "@/providers/AuthProvider";
 import * as Crypto from "expo-crypto";
 import { useFollowing } from "@/hooks/use-following";
 
-export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
+interface PostViewProps {
+  item: Post | null;
+  refetch: () => void;
+  showDivider?: boolean;
+}
+
+export default ({ item, refetch, showDivider = false }: PostViewProps) => {
+  if (!item) return null;
+
   const { user } = useAuth();
   const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`;
   const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user.id}/avatar.jpeg`;
   const fileType = item.file?.split(".").pop();
   const regex = /([#@]\w+)|([^#@]+)/g;
   const textArray = item?.text?.match(regex) || [];
-  const isLiked = item?.Like?.some((like: { user_id: string }) => like.user_id === user?.id);
+  const isLiked = item?.likes?.some((like: { user_id: string }) => like.user_id === user?.id);
   const { data: following, refetch: refetchFollowing } = useFollowing(user?.id || "");
 
   const addLike = async () => {
@@ -97,13 +105,20 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
               </AvatarBadge>
             )}
           </Avatar>
-          {item?.parent_id && (
+          {showDivider && (
+            <Divider
+              orientation="vertical"
+              className="absolute"
+              style={{ height: "150%", zIndex: -1 }}
+            />
+          )}
+          {/* {item?.parent_id && (
             <Divider
               orientation="vertical"
               className="absolute"
               style={{ height: 85, bottom: -50 }}
             />
-          )}
+          )} */}
         </VStack>
         <VStack className="flex-1" space="md">
           <Pressable
@@ -163,9 +178,9 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
                 </HStack>
               </Pressable>
 
-              {item?.Place?.name && (
+              {item?.place?.name && (
                 <Text size="xs" bold className="text-gray-500">
-                  📍{item?.Place?.name}
+                  📍{item?.place?.name}
                 </Text>
               )}
 
@@ -200,9 +215,9 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
                 strokeWidth={1.5}
                 fill={isLiked ? "#ff3040" : "transparent"}
               />
-              {item?.Like?.length > 0 && (
+              {item?.likes?.length > 0 && (
                 <Text size="sm" className="ml-1 text-gray-600">
-                  {item?.Like?.length}
+                  {item?.likes?.length}
                 </Text>
               )}
             </Pressable>
@@ -217,9 +232,9 @@ export default ({ item, refetch }: { item: Post; refetch: () => void }) => {
             >
               <HStack className="items-center">
                 <MessageCircle size={22} color="#666" strokeWidth={1.5} />
-                {item?.Post?.length > 0 && (
+                {item?.posts?.length > 0 && (
                   <Text size="sm" className="ml-1 text-gray-600">
-                    {item?.Post?.length}
+                    {item?.posts?.length}
                   </Text>
                 )}
               </HStack>
