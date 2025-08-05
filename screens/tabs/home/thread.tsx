@@ -14,8 +14,10 @@ import { usePosts } from "@/hooks/use-posts";
 export default () => {
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
-  const { data, refetch } = usePosts({ key: "id", value: id as string, type: "eq" });
-
+  //   const { data, refetch } = usePosts({ key: "id", value: id as string, type: "eq" });
+  const { data, refetch, isLoading } = usePosts({
+    filters: [{ key: "parent_id", value: null, type: "is" }],
+  });
   if (!data) return null;
 
   return (

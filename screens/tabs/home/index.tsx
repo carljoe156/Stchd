@@ -16,7 +16,10 @@ import PostView from "@/components/shared/post-view";
 
 export default () => {
   const { user } = useAuth();
-  const { data, refetch, isLoading } = usePosts({ key: "parent_id", value: null, type: "is" });
+  const { data, refetch, isLoading } = usePosts({
+    filters: [{ key: "parent_id", value: null, type: "is" }],
+  });
+
   const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
 
   return (
