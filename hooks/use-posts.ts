@@ -1,34 +1,43 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
-interface PostProps {
+interface Filter {
   key: string;
   value: string | null;
-  type: "eq" | "is";
+  type: "eq" | "neq" | "is";
 }
 
-export const getPosts = async ({ key, value, type }: PostProps) => {
-  const { data, error } = await supabase
-    .from("Post")
-    .select(
-      `
-    *,
-    user:User!user_id(*),
-    Place(name),
-    Like(user_id),
-    repost_user:User!repost_user_id(*),
-    Post(*, user:User!user_id(*))
+interface PostProps {
+  filters: Filter[];
+}
+
+export const getPosts = async ({ filters }: PostProps) => {
+  let query = supabase.from("Post").select(
     `
-    )
-    .filter(key, type, value)
-    .order("created_at", { ascending: false });
+    *,
+    user: user_id(*),
+    place: Place(name),
+    likes: Like(user_id),
+    repost_user: repost_user_id(*),
+    posts: Post(*, user: user_id(*)),
+    parent: parent_id(*, user: user_id(*))
+    `
+  );
+
+  filters.forEach((filter) => {
+    query = query.filter(filter.key, filter.type, filter.value);
+  });
+
+  const { data, error } = await query.order("created_at", { ascending: false });
+
   if (!error) return data;
+  throw error;
 };
 
-export const usePosts = ({ key, value, type }: PostProps) => {
+export const usePosts = ({ filters }: PostProps) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["posts", key, type, value],
-    queryFn: () => getPosts({ key, value, type }),
+    queryKey: ["posts", JSON.stringify(filters)],
+    queryFn: () => getPosts({ filters }),
   });
 
   return { data, isLoading, error, refetch };
