@@ -49,7 +49,9 @@ export default ({ user }: { user: User }) => {
   const [tab, setTab] = React.useState<(typeof Tabs)[number]>(Tabs[0]);
   //    const [photo, setPhoto] = React.useState<String>('');
   const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
-  const { data, isLoading, refetch } = usePosts({ key: tab.key, value: user?.id, type: "eq" });
+  const { data, isLoading, refetch } = usePosts({
+    filters: [{ key: tab.key, value: user?.id, type: "eq" }],
+  });
   const [showActionSheet, setShowActionSheet] = React.useState(false);
   const { data: followers } = useFollowers(user?.id);
   const { uploadFile } = usePost();
