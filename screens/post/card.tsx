@@ -4,7 +4,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
-import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from "lucide-react-native";
+import { Images, Camera, ImagePlay, Mic, MapPin, AtSign } from "lucide-react-native";
 import { Divider } from "@/components/ui/divider";
 import { Post } from "@/lib/types";
 import { Pressable, Image } from "react-native";
@@ -15,6 +15,7 @@ import { Text } from "@/components/ui/text";
 import Audio from "./audio";
 import Input from "./input";
 import { supabase } from "@/lib/supabase";
+import UserModal from "@/components/shared/user-modal";
 
 interface PostCardProps {
   post: Post;
@@ -126,7 +127,7 @@ export default ({ post }: PostCardProps) => {
           <Pressable onPress={() => setShowAudio(!showAudio)}>
             <Mic size={24} color="gray" strokeWidth={1.5} />
           </Pressable>
-          <Hash size={24} color="gray" strokeWidth={1.5} />
+          <UserModal post={post} updatePost={updatePost} />
           <Pressable
             onPress={() => {
               router.push({
