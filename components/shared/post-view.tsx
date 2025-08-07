@@ -29,7 +29,7 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
 
   const { user } = useAuth();
   const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`;
-  const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user.id}/avatar.jpeg`;
+  const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/avatar.jpeg`;
   const fileType = item.file?.split(".").pop();
   const regex = /([#@]\w+)|([^#@]+)/g;
   const textArray = item?.text?.match(regex) || [];
@@ -121,82 +121,74 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
           )} */}
         </VStack>
         <VStack className="flex-1" space="md">
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: "/thread",
-                params: { id: item.id },
-              })
-            }
-          >
-            <VStack>
-              {item?.repost_user && (
-                <HStack className="items-center" space="sm">
-                  <Repeat size={14} color="gray" strokeWidth={2} />
-                  <Text size="sm" className="mx-2" bold>
-                    Reposted By
-                  </Text>
-                  <Pressable
-                    onPress={() =>
-                      router.push({
-                        pathname: `/user`,
-                        params: { userId: item?.repost_user_id },
-                      })
-                    }
-                  >
-                    <Text size="sm" bold>
-                      {item?.repost_user?.username}
-                    </Text>
-                  </Pressable>
-                </HStack>
-              )}
-              <Pressable
-                onPress={() =>
-                  router.push({
-                    pathname: `/user`,
-                    params: { userId: item?.user_id },
-                  })
-                }
-              >
-                <HStack className="items-center" space="md">
-                  <Text size="lg" bold>
-                    {item?.user?.username}
-                  </Text>
-                  <Text size="md" className="text-gray-500">
-                    .
-                  </Text>
-                  <Text size="md" className="text-gray-500 text-xs">
-                    {item?.created_at &&
-                      formatDistanceToNow(
-                        new Date(
-                          new Date(item?.created_at).getTime() -
-                            new Date().getTimezoneOffset() * 60000
-                        ),
-                        { addSuffix: true }
-                      )}
-                  </Text>
-                </HStack>
-              </Pressable>
-
-              {item?.place?.name && (
-                <Text size="xs" bold className="text-gray-500">
-                  📍{item?.place?.name}
+          <VStack space="xs">
+            {item?.repost_user && (
+              <HStack className="items-center" space="sm">
+                <Repeat size={14} color="gray" strokeWidth={2} />
+                <Text size="sm" className="mx-2" bold>
+                  Reposted By
                 </Text>
-              )}
+                <Pressable
+                  onPress={() =>
+                    router.push({
+                      pathname: `/user`,
+                      params: { userId: item?.repost_user_id },
+                    })
+                  }
+                >
+                  <Text size="sm" bold>
+                    {item?.repost_user?.username}
+                  </Text>
+                </Pressable>
+              </HStack>
+            )}
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: `/user`,
+                  params: { userId: item?.user_id },
+                })
+              }
+            >
+              <HStack className="items-center" space="md">
+                <Text size="lg" bold>
+                  {item?.user?.username}
+                </Text>
+                {/* <Text size="md" className="text-gray-500">
+                  .
+                </Text> */}
+                <Text size="md" className="text-gray-500 text-xs">
+                  {item?.created_at &&
+                    formatDistanceToNow(
+                      new Date(
+                        new Date(item?.created_at).getTime() -
+                          new Date().getTimezoneOffset() * 60000
+                      ),
+                      { addSuffix: true }
+                    )}
+                </Text>
+              </HStack>
+            </Pressable>
 
-              {renderText(textArray)}
+            {item?.place?.name && (
+              <Text size="xs" bold className="text-gray-500">
+                📍{item?.place?.name}
+              </Text>
+            )}
 
-              {item?.file ? (
-                fileType === "m4a" ? (
-                  <Audio id={item.id} uri={imageUrl} />
-                ) : (
-                  <Image
-                    source={{ uri: imageUrl }}
-                    style={{ width: 300, height: 300, borderRadius: 10 }}
-                  />
-                )
-              ) : null}
-              {/* {item?.file && (
+            {renderText({ textArray, post: item })}
+
+            {item?.file ? (
+              fileType === "m4a" ? (
+                <Audio id={item.id} uri={imageUrl} />
+              ) : (
+                <Image
+                  source={{ uri: imageUrl }}
+                  style={{ width: 300, height: 300, borderRadius: 10 }}
+                />
+              )
+            ) : null}
+            {/* {item?.file && (
               <Image
                 source={{f
                   uri: imageUrl,
@@ -204,8 +196,7 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
                 style={{ width: "100%", height: 200, borderRadius: 10 }}
               />
             )} */}
-            </VStack>
-          </Pressable>
+          </VStack>
 
           <HStack className="items-center" space="2xl">
             <Pressable onPress={isLiked ? removeLike : addLike} className="flex-row items-center">
