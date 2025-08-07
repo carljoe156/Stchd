@@ -15,7 +15,7 @@ export const searchPlaces = async (search: string) => {
   const { data, error } = await supabase
     .from("Place")
     .select("*")
-    .ilike("name", `%${search}&`)
+    .ilike("name", `%${search}%`)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return data;

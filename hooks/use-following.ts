@@ -6,8 +6,8 @@ export const getFollowing = async (userId: string) => {
   if (!userId) return null;
   const { data, error } = await supabase
     .from("Followers")
-    .select(`following_user_id`)
-    // .select(`following_user_id(*)`)
+    // .select(`following_user_id`)
+    .select(`following_user_id(*)`)
     .eq("user_id", userId);
 
   const following = data?.map((follower) => follower?.following_user_id);
