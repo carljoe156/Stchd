@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Pressable, SafeAreaView, View, Image, ScrollView } from "react-native";
+import { FlatList, Pressable, SafeAreaView, View } from "react-native";
 import { useAuth } from "@/providers/AuthProvider";
 import StchdIcon from "@/assets/icons/stchd";
 import { HStack } from "@/components/ui/hstack";
@@ -8,7 +8,7 @@ import { Avatar, AvatarImage, AvatarFallbackText } from "@/components/ui/avatar"
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from "lucide-react-native";
+import { Images, Camera, ImagePlay, Mic, MapPin, AtSign } from "lucide-react-native";
 import { router } from "expo-router";
 import { Divider } from "@/components/ui/divider";
 import { usePosts } from "@/hooks/use-posts";
@@ -62,7 +62,7 @@ export default () => {
                 <Camera size={24} color="gray" strokeWidth={1.5} />
                 <ImagePlay size={24} color="gray" strokeWidth={1.5} />
                 <Mic size={24} color="gray" strokeWidth={1.5} />
-                <Hash size={24} color="gray" strokeWidth={1.5} />
+                <AtSign size={24} color="gray" strokeWidth={1.5} />
                 <MapPin size={24} color="gray" strokeWidth={1.5} />
               </HStack>
             </VStack>
