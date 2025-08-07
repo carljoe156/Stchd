@@ -13,7 +13,8 @@ export interface Post {
   created_at?: string;
   User?: User;
   Post?: Post[];
-  tag_mame?: string | null;
+  tag_name?: string | null;
+  mention_user_id?: string | null;
 }
 
 export interface Place {
