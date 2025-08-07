@@ -171,9 +171,15 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
             </Pressable>
 
             {item?.place?.name && (
-              <Text size="xs" bold className="text-gray-500">
-                📍{item?.place?.name}
-              </Text>
+              <Pressable
+                onPress={() =>
+                  router.push({ pathname: "/posts", params: { placeId: item.place_id } })
+                }
+              >
+                <Text size="xs" bold className="text-gray-500">
+                  📍{item?.place?.name}
+                </Text>
+              </Pressable>
             )}
 
             {renderText({ textArray, post: item })}
