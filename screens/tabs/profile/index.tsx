@@ -1,8 +1,8 @@
 import React from "react";
 import { useAuth } from "@/providers/AuthProvider";
-import User from "@/components/shared/user";
+import Profile from "@/components/shared/profile-view";
 
 export default () => {
   const { user } = useAuth();
-  return <User user={user} />;
+  return <Profile user={user} />;
 };
