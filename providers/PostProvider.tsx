@@ -29,6 +29,8 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
     text: "",
     file: null,
     place_id: null,
+    tag_name: null,
+    mention_user_id: null,
   };
 
   const [posts, setPosts] = React.useState<Post[]>([DefaultPost]);
@@ -56,46 +58,61 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
     setPosts([...posts, { ...DefaultPost, parent_id: posts[0].id }]);
   };
 
-  // const uploadPosts = async () => {
-  //   try {
-  //     const { data, error } = await supabase.from("Post").insert(posts);
-  //     if (error) {
-  //       console.error("Database insert error:", error);
-  //       return null;
-  //     }
-  //     console.log("Posts uploaded successfully:", data);
-  //     return data || true;
-  //   } catch (error) {
-  //     console.error("Upload posts failed:", error);
-  //     return null;
-  //   }
-  // };
-
-  const uploadPosts = async () => {
-    const { data, error } = await supabase.from("Post").insert(posts);
-
-    if (error) {
-      console.error("Upload error:", error);
-      return false;
+  const checkForTags = (text: string) => {
+    const regex = /#\w+(?=\s|$)/g;
+    const tags = text.match(regex) || [];
+    return tags.map((tag) => tag.slice(1));
+  };
+  const createTag = async (postId: string, text: string) => {
+    const { error } = await supabase
+      .from("Tag")
+      .upsert({
+        name: text,
+        updated_at: new Date(),
+      })
+      .select();
+    if (!error) {
+      await supabase
+        .from("Post")
+        .update({
+          tag_name: text,
+        })
+        .eq("id", postId);
     }
-
-    return true;
   };
 
-  // const uploadPosts = async () => {
-  //   const { data, error } = await supabase.from("Post").insert(posts);
-  //   if (!error) {
-  //     clearPosts();
-  //     router.back();
-  //   }
-  //   if (!error) console.error(error);
-  // };
+  const uploadPosts = async () => {
+    posts.map((p) => {
+      checkForTags(p.text).forEach((tag) => createTag(p.id, `#${tag.toUpperCase()}`));
+    });
+    const { data, error } = await supabase.from("Post").insert(posts);
+    if (!error) {
+      clearPosts();
+      router.back();
+    }
+    if (error) console.error(error);
+  };
 
-  const updatePost = (id: string, key: string, value: string) => {
+  const updatePost = (
+    id: string,
+    keyOrUpdates: string | { key: string; value: string | null }[],
+    value?: string | null
+  ) => {
     setPosts(
       posts.map((p: Post) => {
-        if (p.id === id) return { ...p, [key]: value, user_id: user?.id };
-        return { ...p, user_id: user?.id };
+        if (p.id === id) {
+          const updatedPost = { ...p, user_id: user?.id || "" };
+          if (Array.isArray(keyOrUpdates)) {
+            keyOrUpdates.forEach(({ key, value }) => {
+              updatedPost[key] = value;
+            });
+          } else {
+            updatedPost[keyOrUpdates] = value;
+          }
+
+          return updatedPost;
+        }
+        return p;
       })
     );
   };
