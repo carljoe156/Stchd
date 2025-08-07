@@ -1,5 +1,4 @@
 import { FlatList, Text } from "react-native";
-// import { useAuth } from "@/providers/AuthProvider";
 import { Divider } from "@/components/ui/divider";
 import { usePosts } from "@/hooks/use-posts";
 import { useAuth } from "@/providers/AuthProvider";
