@@ -26,6 +26,5 @@ export const usePlaces = (search: string) => {
     queryKey: ["places", search],
     queryFn: search ? () => searchPlaces(search) : getPlaces,
   });
-
   return { data, isLoading, error };
 };
