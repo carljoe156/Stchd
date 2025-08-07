@@ -5,7 +5,6 @@ import {
   Platform,
   SafeAreaView,
   TouchableWithoutFeedback,
-  Alert,
 } from "react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Avatar, AvatarImage, AvatarFallbackText } from "@/components/ui/avatar";
@@ -24,7 +23,6 @@ export default () => {
   const { user } = useAuth();
   const { posts, updatePost, addThread, uploadPosts, clearPosts } = usePost();
   const [isPosting, setIsPosting] = React.useState(false);
-
   // const handlePost = async () => {
   //   setIsPosting(true);
   //   try {
