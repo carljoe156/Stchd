@@ -13,6 +13,8 @@ model User {
   id         String      @id
   username   String      @unique
   avatar     String?
+  bio        String?
+  email      String?
   created_at DateTime    @default(now())
   posts      Post[]      @relation("User")
   repost     Post[]      @relation("RepostUser")
