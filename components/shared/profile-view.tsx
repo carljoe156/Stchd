@@ -107,30 +107,38 @@ export default ({ user }: { user: User }) => {
           <Text size="3xl" bold className="text-black">
             {user?.username}
           </Text>
-          {followers && (
-            <AvatarGroup>
-              {followers.slice(0, 3).map((item, index) => {
-                const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user?.id}/avatar.jpeg`;
-                return (
-                  <Avatar key={index} size="sm" className={"border-2 border-outline-0"}>
-                    <AvatarFallbackText className="text-white">
-                      {item?.user?.username}
-                    </AvatarFallbackText>
-                    <AvatarImage
-                      source={{
-                        uri: avatarUrl,
-                      }}
-                    />
+          {user?.bio ? (
+            <Text bold className="text-gray-600 mt-1">
+              {user.bio}
+            </Text>
+          ) : null}
+          {user?.email ? <Text className="text-gray-500 mt-1">{user.email}</Text> : null}
+          <HStack>
+            {followers && (
+              <AvatarGroup className="ml-5">
+                {followers.slice(0, 3).map((item, index) => {
+                  const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user?.id}/avatar.jpeg`;
+                  return (
+                    <Avatar key={index} size="sm" className={"border-2 border-outline-0"}>
+                      <AvatarFallbackText className="text-white">
+                        {item?.user?.username}
+                      </AvatarFallbackText>
+                      <AvatarImage
+                        source={{
+                          uri: avatarUrl,
+                        }}
+                      />
+                    </Avatar>
+                  );
+                })}
+                {followers.length > 3 && (
+                  <Avatar size="sm" className={"border-2 border-outline-0"}>
+                    <AvatarFallbackText>{"+ " + (followers.length - 3) + ""}</AvatarFallbackText>
                   </Avatar>
-                );
-              })}
-              {followers.length > 3 && (
-                <Avatar size="sm" className={"border-2 border-outline-0"}>
-                  <AvatarFallbackText>{"+ " + (followers.length - 3) + ""}</AvatarFallbackText>
-                </Avatar>
-              )}
-            </AvatarGroup>
-          )}
+                )}
+              </AvatarGroup>
+            )}
+          </HStack>
         </VStack>
         <Pressable onPress={isOwner ? addPhoto : () => {}}>
           <Avatar size="lg">
@@ -141,16 +149,13 @@ export default ({ user }: { user: User }) => {
               <Plus size={8} color="white" strokeWidth={5} />
             </AvatarBadge>
             <AvatarFallbackText>{user?.username}</AvatarFallbackText>
-            <AvatarImage source={{ uri: avatarUrl }} />
+            <AvatarImage source={{ uri: avatarUrl }} className="w-12 h-12 rounded-full" />
           </Avatar>
         </Pressable>
       </HStack>
 
       {isOwner && (
         <HStack space="md" className="items-center justify-between p-3">
-          {/* <Text size="xl" bold className="text-black">
-          {user?.bio}
-        </Text> */}
           <Button
             onPress={() => setShowActionSheet(true)}
             variant="outline"
