@@ -23,7 +23,8 @@ export default ({
   buttonText: string;
 }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    // <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView className="flex-1 pt-10 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === "android" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -46,9 +47,7 @@ export default ({
                 <View className="w-10" />
               </HStack>
             </VStack>
-            <VStack className="flex-1 justify-center items-center px-4">
-              {children}
-            </VStack>
+            <VStack className="flex-1 justify-center items-center px-4">{children}</VStack>
             <VStack className="items-center justify-center">
               <Button onPress={onPress} size="lg">
                 <ButtonText>{buttonText}</ButtonText>
