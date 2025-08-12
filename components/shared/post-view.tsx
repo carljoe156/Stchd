@@ -120,7 +120,7 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
             />
           )} */}
         </VStack>
-        <VStack className="flex-1" space="md">
+        <VStack className="flex-1 full" space="md">
           <VStack space="xs">
             {item?.repost_user && (
               <HStack className="items-center" space="sm">
@@ -191,6 +191,8 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
                 <Image
                   source={{ uri: imageUrl }}
                   style={{ width: 300, height: 300, borderRadius: 10 }}
+                  // className="w-2/3 aspect-[3/4] rounded"
+                  // resizeMode="cover"
                 />
               )
             ) : null}
