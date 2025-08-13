@@ -1,8 +1,8 @@
 import Svg, { Path } from "react-native-svg";
 
-export default function StchdIcon({ size = 25 }) {
+export default function StchdIcon({ size = 75 }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
+    <Svg width={size} height={size} viewBox="0 0 510 510">
       <Path
         fill="#000"
         d="M500.869,195.484L319.178,13.792c-3.379-3.388-7.876-5.257-12.655-5.257h-0.017c-4.787,0-9.284,1.869-12.672,5.24
