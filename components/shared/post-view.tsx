@@ -8,7 +8,7 @@ import { Plus, MessageCircle, Heart, Repeat, Send } from "lucide-react-native";
 import { formatDistanceToNow } from "date-fns";
 import { Divider } from "@/components/ui/divider";
 import { Post } from "@/lib/types";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { router } from "expo-router";
 import { Image } from "react-native";
 import Audio from "@/screens/post/audio";
@@ -154,9 +154,6 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
                 <Text size="lg" bold>
                   {item?.user?.username}
                 </Text>
-                {/* <Text size="md" className="text-gray-500">
-                  .
-                </Text> */}
                 <Text size="md" className="text-gray-500 text-xs">
                   {item?.created_at &&
                     formatDistanceToNow(
