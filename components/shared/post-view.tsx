@@ -193,14 +193,6 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
                 />
               )
             ) : null}
-            {/* {item?.file && (
-              <Image
-                source={{f
-                  uri: imageUrl,
-                }}
-                style={{ width: "100%", height: 200, borderRadius: 10 }}
-              />
-            )} */}
           </VStack>
 
           <HStack className="items-center" space="2xl">
