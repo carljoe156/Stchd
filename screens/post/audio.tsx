@@ -60,7 +60,6 @@ export default ({ id, userId, uri }: { id: string; userId: string; uri?: string 
     const file = await uploadFile(id, audioRecorder.uri || "", "audio/m4a", filename);
     // console.log('File', file);
     let url = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${userId}/${filename}`;
-    // console.log('url', url);
     setAudioUri(url);
   };
   if (audioUri) {
