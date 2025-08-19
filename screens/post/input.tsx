@@ -8,7 +8,7 @@ interface InputProps {
   post: Post;
   updatePost: (id: string, updates: { key: string; value: string }[]) => void;
   textArray: string[];
-  // setContentHeight: (height: number) => void;
+  setContentHeight: (height: number) => void;
 }
 
 export const renderText = ({ textArray, post }: { textArray: string[]; post?: Post }) => {
@@ -54,7 +54,7 @@ export default ({ post, updatePost, textArray }: InputProps) => {
       placeholder="what's new?"
       multiline={true}
       onChangeText={(text) => updatePost(post.id, "text", text)}
-      // onContentSizeChange={(e) => console.log(e.nativeEvent.contentSize.height) }
+      onContentSizeChange={(e) => console.log(e.nativeEvent.contentSize.height)}
     >
       {renderText({ textArray })}
     </TextInput>
