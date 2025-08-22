@@ -126,7 +126,7 @@ export default ({ item, refetch, showDivider = false }: PostViewProps) => {
               <HStack className="items-center" space="sm">
                 <Repeat size={14} color="gray" strokeWidth={2} />
                 <Text size="sm" className="mx-2" bold>
-                  Reposted By
+                  Reposted By:
                 </Text>
                 <Pressable
                   onPress={() =>
